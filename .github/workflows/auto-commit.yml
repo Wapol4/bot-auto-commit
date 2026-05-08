@@ -1,8 +1,11 @@
-name: DevOps Activity Bot
+name: DevOps Activity Simulator
 
 on:
-  # schedule:
-  #   - cron: '*/5 * * * *'
+  schedule:
+    # random-ish daily times UTC
+    - cron: "13 1 * * *"
+    - cron: "47 6 * * *"
+    - cron: "22 11 * * *"
   workflow_dispatch:
 
 permissions:
@@ -11,16 +14,54 @@ permissions:
 jobs:
   simulate:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup git
+      - name: Setup Git
         run: |
-          git config --global user.name "devops-bot"
-          git config --global user.email "bot@github.com"
+          git config --global user.name "wapol4"
+          git config --global user.email "eairist@gmail.com"
 
-      - name: Run bot
-        run: python auto_commit.py
+      - name: Generate DevOps Activity
+        run: |
+          mkdir -p activity
+
+          TIMESTAMP=$(date)
+
+          ACTIONS=(
+            "update terraform variables"
+            "refactor kubernetes manifest"
+            "improve helm values"
+            "optimize nginx ingress"
+            "adjust hpa scaling"
+            "update ci pipeline"
+            "fix monitoring labels"
+            "improve loki retention"
+            "tune victoria metrics"
+            "cleanup docker image"
+          )
+
+          RANDOM_ACTION=${ACTIONS[$RANDOM % ${#ACTIONS[@]}]}
+
+          echo "$TIMESTAMP - $RANDOM_ACTION" >> activity/history.log
+
+      - name: Simulate Terraform Change
+        run: |
+          echo "# updated $(date +%s)" >> environments/dev.tfvars
+
+      - name: Commit Changes
+        run: |
+          git add .
+
+          git commit -m "chore(terraform): $(shuf -n 1 -e \
+          'update infra config' \
+          'improve monitoring stack' \
+          'refactor helm deployment' \
+          'optimize kubernetes resources' \
+          'update ingress settings')" || echo "No changes"
 
       - name: Push
-        run: git push
+        run: |
+          git push
