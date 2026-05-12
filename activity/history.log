@@ -9,3 +9,4 @@ Sun May 10 11:39:46 UTC 2026 - refactor kubernetes manifest
 Mon May 11 01:53:08 UTC 2026 - cleanup docker image
 Mon May 11 08:00:43 UTC 2026 - improve helm values
 Mon May 11 12:26:16 UTC 2026 - tune victoria metrics
+Tue May 12 01:53:05 UTC 2026 - update terraform variables
